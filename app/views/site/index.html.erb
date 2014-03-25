@@ -12,12 +12,22 @@
   </br>
   <img id="yourimage" style="width:60%"> -->
 
-  <img ng-if="image" src="{{image}}" alt="">
-<!--  <form action="">
+<!--  <img ng-if="image" src="{{image}}" alt="">
+  <form action="">
     <input my-upload type="file" name="upload" capture="camera" accept="image/*">  
   </form> -->
-  <input type="file" file-model="myFile" capture="camera" accept="image/*">
-  <button ng-click="uploadFile()">upload me</button>
+<!--   <input type="file" file-model="myFile" capture="camera" accept="image/*">
+  <button ng-click="uploadFile()">upload me</button> -->
+
+<%= form_for @article, :html => {:multipart => true} do |f| %>
+  <p>
+    <label>Attach image</label>
+    <%= image_tag(@article.image_url) if @article.image? %>
+    <%= f.file_field :image %>
+
+  </p>
+  <p><%= f.submit %></p>
+<% end %>
 
 </div>
 

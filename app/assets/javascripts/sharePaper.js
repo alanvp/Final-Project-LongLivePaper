@@ -1,3 +1,8 @@
+// $("#s3-uploader").S3Uploader();
+
+
+
+
 // var desiredWidth;
  
 // $(document).ready(function() {
@@ -22,49 +27,49 @@
 
 
 
-var sharePaperApp = angular.module('sharePaper', []);
+// var sharePaperApp = angular.module('sharePaper', []);
 
-sharePaperApp.controller('Ctrl', ['$scope', 'fileUpload', function($scope, fileUpload){
-    $scope.uploadFile = function(){
-        var file = $scope.myFile;
-        console.log('file is ' + JSON.stringify(file));
-        var uploadUrl = "/site";
-        fileUpload.uploadFileToUrl(file, uploadUrl);
-    };
-}]);
+// sharePaperApp.controller('Ctrl', ['$scope', 'fileUpload', function($scope, fileUpload){
+//     $scope.uploadFile = function(){
+//         var file = $scope.myFile;
+//         console.log('file is ' + JSON.stringify(file));
+//         var uploadUrl = "/site";
+//         fileUpload.uploadFileToUrl(file, uploadUrl);
+//     };
+// }]);
 
-sharePaperApp.service('fileUpload', ['$http', function ($http) {
-  this.uploadFileToUrl = function(file, uploadUrl){
-    var fd = new FormData();
-    fd.append('file', file);
-    $http.post(uploadUrl, fd, {
-        transformRequest: angular.identity,
-        headers: {'Content-Type': undefined, 'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')}
-    })
-    .success(function(){
-      console.log("Success!");
-    })
-    .error(function(){
-      console.log("Oh Pisser!");
-    });
-  };
-}]);
+// sharePaperApp.service('fileUpload', ['$http', function ($http) {
+//   this.uploadFileToUrl = function(file, uploadUrl){
+//     var fd = new FormData();
+//     fd.append('file', file);
+//     $http.post(uploadUrl, fd, {
+//         transformRequest: angular.identity,
+//         headers: {'Content-Type': undefined, 'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')}
+//     })
+//     .success(function(){
+//       console.log("Success!");
+//     })
+//     .error(function(){
+//       console.log("Oh Pisser!");
+//     });
+//   };
+// }]);
 
-sharePaperApp.directive('fileModel', ['$parse', function ($parse) {
-  return {
-    restrict: 'A',
-    link: function(scope, element, attrs) {
-        var model = $parse(attrs.fileModel);
-        var modelSetter = model.assign;
+// sharePaperApp.directive('fileModel', ['$parse', function ($parse) {
+//   return {
+//     restrict: 'A',
+//     link: function(scope, element, attrs) {
+//         var model = $parse(attrs.fileModel);
+//         var modelSetter = model.assign;
         
-        element.bind('change', function(){
-            scope.$apply(function(){
-                modelSetter(scope, element[0].files[0]);
-            });            
-        });
-    }
-  };
-}]);
+//         element.bind('change', function(){
+//             scope.$apply(function(){
+//                 modelSetter(scope, element[0].files[0]);
+//             });            
+//         });
+//     }
+//   };
+// }]);
 
 
 // sharePaper.controller('Ctrl', ['$scope', "$http", function ($scope, $http) {
