@@ -40,6 +40,10 @@ gem 'carrierwave'
 
 gem "mini_magick"
 
+gem "fog", "~> 1.3.1"
+
+gem 'dotenv-rails', :groups => [:development, :test]
+
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
