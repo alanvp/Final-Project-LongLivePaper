@@ -44,6 +44,7 @@ gem "fog", "~> 1.3.1"
 
 gem 'dotenv-rails', :groups => [:development, :test]
 
+gem 'carrierwave_direct'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
