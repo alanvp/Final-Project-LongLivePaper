@@ -4,6 +4,13 @@ class ArticlesController < ApplicationController
     @mturk = Amazon::WebServices::MechanicalTurkRequester.new :Host => :Sandbox
   end
     
+  def index
+  #  openRequests = Article.where("title = nil")
+    checkForResults()
+    @articles = Article.all
+    @article = Article.new
+  end
+
   def create
     @article = Article.new(params.require(:article).permit(:image))
     if @article.save
@@ -15,8 +22,27 @@ class ArticlesController < ApplicationController
     end
   end
 
-  def createNewHit(article)
+  def checkForResults()
+      reviewableHits = @mturk.GetReviewableHITs(:Status => "Reviewable")[:GetReviewableHITsResult][:HIT]
+        reviewableHits.each do |hitId|
+          hitId = hitId[:HITId]
+          binding.pry
+          hit = @mturk.GetHIT(:HITId => hitId)[:HIT]
+          answer = @mturk.GetAssignmentsForHIT(:HITId => hitId)
+          # if hit[:Expiration] < Time.now
+          #   @mturk.DisposeHIT(:HITId => hitId)[:GetAssignmentsForHITResult][]
+          binding.pry
+          # end
+        end
+
+
+      
     
+
+  end
+
+
+  def createNewHit(article)
     title = "Write the words from an image and find website"
     desc = "Transcribe the headline shown in an image of an article and find the url of that article."
     keywords = "image, write, transcription, URL"
@@ -26,10 +52,10 @@ class ArticlesController < ApplicationController
     lifetimeInSeconds = 60 * 60 * 6 # 6 hours
     hitLayout = "3ZWZ4MEZJVIMBWFDF5RX4PW7BCQF19"
     hitLayoutParams = {:Name => 'image_url', :Value => article.image_url}
-    qualRequirement = {
-      :QualificationTypeId => '2ARFPLSP75KLA8M8DH1HTEQVJT3SY6', 
-      :Comparator => 'Exists'
-    }  
+    # qualRequirement = {
+    #   :QualificationTypeId => '2ARFPLSP75KLA8M8DH1HTEQVJT3SY6', 
+    #   :Comparator => 'Exists'
+    # }  
 
     # begin
     result = @mturk.createHIT( :Title => title,
@@ -41,15 +67,15 @@ class ArticlesController < ApplicationController
                     :HITLayoutParameter => hitLayoutParams,
                     :LifetimeInSeconds => lifetimeInSeconds,
                     :AssignmentDurationInSeconds => assignmentDurationInSeconds,
-                    :QualificationRequirement => qualRequirement
+                    # :QualificationRequirement => qualRequirement
                     )
-  # rescue Amazon::WebServices::Util::ValidationException => e
-    binding.pry
+  # rescue Amazon::WebServices::Util::ValidationException => e 
   #  puts e.inspect
   # end
     puts "Created HIT: #{result[:HITId]}"
     puts "Url: #{getHITUrl( result[:HITTypeId] )}"
-    binding.pry
+    article.HIT_ID = result[:HITId]
+    article.status = "pending"
   end
 
   def getHITUrl( hitTypeId )
