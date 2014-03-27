@@ -1,7 +1,7 @@
 class ArticlesController < ApplicationController
 
   def initialize
-    @mturk = Amazon::WebServices::MechanicalTurkRequester.new :Host => :Production
+    @mturk = Amazon::WebServices::MechanicalTurkRequester.new :Host => :Sandbox
   end
     
   def index
@@ -44,11 +44,9 @@ class ArticlesController < ApplicationController
             article.periodical = answerHash["periodical"]
             article.status = "answered"
             article.save
-            begin
-              @mturk.DisposeHIT(:HITId => hitId)
-            rescue Amazon::WebServices::Util::ValidationException => e 
-              puts e.inspect
-            end
+     
+            @mturk.DisposeHIT(:HITId => hitId)
+            
           end
    
           # if hit[:Expiration] < Time.now
