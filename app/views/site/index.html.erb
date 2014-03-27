@@ -2,9 +2,9 @@
 
  
 
-
+<!-- 
 <div ng-controller="Ctrl">
-<!--   <form ng-submit="addImg()">
+  <form ng-submit="addImg()">
     <input ng-model="picture" type="file" id="take-picture" capture="camera" accept="image/*" value="Take picture">
   </form> -->
 
@@ -19,17 +19,14 @@
 <!--   <input type="file" file-model="myFile" capture="camera" accept="image/*">
   <button ng-click="uploadFile()">upload me</button> -->
 
-<%= form_for @article, :html => {:multipart => true} do |f| %>
-  <p>
-    <label>Attach image</label>
-   
-    <input id="article_image" name="article[image]" type="file" capture="camera" accept="image/*" >
-    
-
-  </p>
-  <p><%= f.submit %></p>
-<% end %>
-
+<div>
+  <%= form_for @article, :html => {:multipart => true} do |f| %>
+    <p>
+      <label>Attach image</label>  
+      <input id="article_image" name="article[image]" type="file" capture="camera" accept="image/*" >
+    </p>
+    <p><%= f.submit %></p>
+  <% end %>
 
 </div>
 

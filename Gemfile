@@ -46,6 +46,8 @@ gem 'dotenv-rails', :groups => [:development, :test]
 
 # gem 'carrierwave_direct'
 
+gem 'ruby-aws'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
