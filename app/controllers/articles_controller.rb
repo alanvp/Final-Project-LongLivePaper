@@ -1,7 +1,7 @@
 class ArticlesController < ApplicationController
 
   def initialize
-    @mturk = Amazon::WebServices::MechanicalTurkRequester.new :Host => :Sandbox
+    @mturk = Amazon::WebServices::MechanicalTurkRequester.new :Host => :Production
   end
     
   def index
