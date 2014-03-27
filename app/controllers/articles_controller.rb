@@ -7,6 +7,7 @@ class ArticlesController < ApplicationController
   def index
   #  openRequests = Article.where("title = nil")
     checkForResults()
+    binding.pry
     @articles = Article.all
     @article = Article.new
   end
@@ -14,24 +15,48 @@ class ArticlesController < ApplicationController
   def create
     @article = Article.new(params.require(:article).permit(:image))
     if @article.save
-      flash[:notice] = "Successfully created article."
-      
+      flash[:notice] = "Successfully submitted article."    
       createNewHit(@article)
+      redirect_to root
     else
       render :action => 'new'
     end
   end
 
   def checkForResults()
-      reviewableHits = @mturk.GetReviewableHITs(:Status => "Reviewable")[:GetReviewableHITsResult][:HIT]
+      reviewableHits = @mturk.GetReviewableHITs(:Status => "Reviewable")[:GetReviewableHITsResult][:HIT] || []
+
+      if !reviewableHits.is_a?(Array)
+        reviewableHits=[reviewableHits]
+      end
+
         reviewableHits.each do |hitId|
+     
           hitId = hitId[:HITId]
-          binding.pry
-          hit = @mturk.GetHIT(:HITId => hitId)[:HIT]
-          answer = @mturk.GetAssignmentsForHIT(:HITId => hitId)
+          article = Article.find_by(HIT_ID: hitId)
+      
+          # hit = @mturk.GetHIT(:HITId => hitId)[:HIT]
+          answer = @mturk.GetAssignmentsForHIT(:HITId => hitId)[:GetAssignmentsForHITResult][:Assignment]
+          if answer != nil
+            assignmentId = answer[:AssignmentId]
+            @mturk.ApproveAssignment(:AssignmentId => assignmentId)
+            answerHash = @mturk.simplifyAnswer(answer[:Answer])
+            binding.pry
+            article.headline = answerHash["headline"]
+            article.url = answerHash["url"]
+            article.periodical = answerHash["periodical"]
+            article.status = "answered"
+            article.save
+            begin
+              @mturk.DisposeHIT(:HITId => hitId)
+            rescue Amazon::WebServices::Util::ValidationException => e 
+              puts e.inspect
+            end
+            binding.pry
+          end
           # if hit[:Expiration] < Time.now
           #   @mturk.DisposeHIT(:HITId => hitId)[:GetAssignmentsForHITResult][]
-          binding.pry
+          
           # end
         end
 
@@ -76,6 +101,7 @@ class ArticlesController < ApplicationController
     puts "Url: #{getHITUrl( result[:HITTypeId] )}"
     article.HIT_ID = result[:HITId]
     article.status = "pending"
+    article.save
   end
 
   def getHITUrl( hitTypeId )
