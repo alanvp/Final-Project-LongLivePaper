@@ -7,8 +7,8 @@ class ArticlesController < ApplicationController
   def index
   #  openRequests = Article.where("title = nil")
     checkForResults()
-    binding.pry
-    @articles = Article.all
+    @articles = Article.where("status = 'answered'")
+
     @article = Article.new
   end
 
@@ -17,24 +17,22 @@ class ArticlesController < ApplicationController
     if @article.save
       flash[:notice] = "Successfully submitted article."    
       createNewHit(@article)
-      redirect_to root
+      redirect_to "/"
     else
       render :action => 'new'
     end
   end
 
   def checkForResults()
-      reviewableHits = @mturk.GetReviewableHITs(:Status => "Reviewable")[:GetReviewableHITsResult][:HIT] || []
+    reviewableHits = @mturk.GetReviewableHITs(:Status => "Reviewable")[:GetReviewableHITsResult][:HIT] || []
 
       if !reviewableHits.is_a?(Array)
         reviewableHits=[reviewableHits]
       end
 
         reviewableHits.each do |hitId|
-     
           hitId = hitId[:HITId]
-          article = Article.find_by(HIT_ID: hitId)
-      
+          article = Article.find_by(HIT_ID: hitId)  
           # hit = @mturk.GetHIT(:HITId => hitId)[:HIT]
           answer = @mturk.GetAssignmentsForHIT(:HITId => hitId)[:GetAssignmentsForHITResult][:Assignment]
           if answer != nil
@@ -52,8 +50,8 @@ class ArticlesController < ApplicationController
             rescue Amazon::WebServices::Util::ValidationException => e 
               puts e.inspect
             end
-            binding.pry
           end
+   
           # if hit[:Expiration] < Time.now
           #   @mturk.DisposeHIT(:HITId => hitId)[:GetAssignmentsForHITResult][]
           

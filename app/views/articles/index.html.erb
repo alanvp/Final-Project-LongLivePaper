@@ -1,4 +1,4 @@
-<h1>Long Live Paper</h1>
+<h1>SocialPaper</h1>
 
  
 
@@ -20,14 +20,30 @@
   <button ng-click="uploadFile()">upload me</button> -->
 
 <div>
+  <h3>New Search</h3>
   <%= form_for @article, :html => {:multipart => true} do |f| %>
-    <p>
-      <label>Attach image</label>  
+    
+      <label>Attach image</label></br>  
       <input id="article_image" name="article[image]" type="file" capture="camera" accept="image/*" >
-    </p>
-    <p><%= f.submit %></p>
+      </br>
+    <p><%= f.submit value="Find article"%></p>
   <% end %>
-
+</div>
+</br>
+</br>
+<h3>Previous Searches</h3>
+<div>  
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tbody>
+      <% @articles.each do |a| %>
+          <tr>
+            <td><p><%=a.periodical%></p></td>
+            <td><p><%=a.headline%></p></td>
+            <td><p><%=a.url%></p></td>
+          </tr>
+      <%end%>
+    </tbody>
+  </table>                    
 </div>
 
 <!-- <form name="takePicture" ng-controller="Ctrl"> -->

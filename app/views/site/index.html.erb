@@ -29,7 +29,18 @@
   <% end %>
 </div>
 
-<div>
+<div>  
+  <table>
+    <tbody>
+      <% @articles.each do |a| %>
+          <tr>
+            <td><p><%=a.periodical%></p></td>
+            <td><p><%=a.headline%></p></td>
+            <td><p><%=a.url%></p></td>
+          </tr>
+      <%end%>
+    </tbody>
+  </table>                    
 </div>
 <!-- <form name="takePicture" ng-controller="Ctrl"> -->
 
