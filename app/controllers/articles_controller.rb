@@ -2,6 +2,7 @@ class ArticlesController < ApplicationController
 
   def initialize
     @mturk = Amazon::WebServices::MechanicalTurkRequester.new :Host => :Sandbox
+    super
   end
     
   def index
