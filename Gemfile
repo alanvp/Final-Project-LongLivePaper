@@ -42,7 +42,7 @@ gem "mini_magick"
 
 gem "fog", "~> 1.3.1"
 
-gem 'dotenv-rails' #, :groups => [:development, :test]
+gem 'dotenv-rails', :groups => [:development, :test]
 
 # gem 'carrierwave_direct'
 
