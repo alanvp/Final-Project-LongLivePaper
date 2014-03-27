@@ -39,7 +39,6 @@ class ArticlesController < ApplicationController
             assignmentId = answer[:AssignmentId]
             @mturk.ApproveAssignment(:AssignmentId => assignmentId)
             answerHash = @mturk.simplifyAnswer(answer[:Answer])
-            binding.pry
             article.headline = answerHash["headline"]
             article.url = answerHash["url"]
             article.periodical = answerHash["periodical"]
