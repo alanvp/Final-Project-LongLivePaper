@@ -37,8 +37,9 @@ class ArticlesController < ApplicationController
   end
 
   def destroy
-    id = params.require(:id).permit(:id)
+    id = params[:id]
     Article.find(id).destroy
+    redirect_to "/"
   end
 
 
