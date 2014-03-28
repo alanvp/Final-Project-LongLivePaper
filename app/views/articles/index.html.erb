@@ -46,7 +46,8 @@
     <tbody>
       <% @articles.each do |a| %>
           <tr>
-            <td><%=a.created_at%></td>
+            <td><%=a.created_at%></br>
+                <%= link_to "Delete", article_path(a.id), method: :delete %></td>
             <td><%=a.periodical%></td>
             <td><a href="<%=a.url%>"><%=a.headline%></a></td>
           </tr>

@@ -36,6 +36,12 @@ class ArticlesController < ApplicationController
     end
   end
 
+  def destroy
+    id = params.require(:id).permit(:id)
+    Article.find(id).destroy
+  end
+
+
   def checkForResults()
     reviewableHits = @mturk.GetReviewableHITs(:Status => "Reviewable")[:GetReviewableHITsResult][:HIT] || []
 
