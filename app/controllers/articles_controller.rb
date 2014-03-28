@@ -1,9 +1,19 @@
 class ArticlesController < ApplicationController
 
   def initialize
-    # ymlstring = "AWSAccessKeyId: #{ENV['AWS_ACCESS_KEY_ID']}\nAWSAccessKey: #{ENV['AWS_SECRET_ACCESS_KEY']}\nHost: Sandbox"
-    # @mturk = Amazon::WebServices::MechanicalTurkRequester.new :Config => ymlstring
-    @mturk = Amazon::WebServices::MechanicalTurkRequester.new :Host => :Production
+     ymlstring = "AWSAccessKeyId: #{ENV['AWS_ACCESS_KEY_ID']}\nAWSAccessKey: #{ENV['AWS_SECRET_ACCESS_KEY']}\nHost: Sandbox"
+
+    File.open(Rails.root.join('config', 'mturk.yml'), 'w') do |f|  
+      f.puts ymlstring 
+    end  
+    
+    @mturk = Amazon::WebServices::MechanicalTurkRequester.new :Config => Rails.root.join('config', 'mturk.yml')
+    #@mturk = Amazon::WebServices::MechanicalTurkRequester.new :Config => ymlstring
+    #@mturk = Amazon::WebServices::MechanicalTurkRequester.new :Config => Rails.root.join('config', 'mturk.yml')
+    #@mturk = Amazon::WebServices::MechanicalTurkRequester.new(
+      # :AWSAcessKeyId => ENV['AWS_ACCESS_KEY_ID'],
+      # :AWSAccessKey  => ENV['AWS_SECRET_ACCESS_KEY'])
+    #@mturk = Amazon::WebServices::MechanicalTurkRequester.new :Host => :Production
     super
   end
     
