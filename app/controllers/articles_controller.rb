@@ -1,8 +1,9 @@
 class ArticlesController < ApplicationController
 
   def initialize
-    ymlstring = "AWSAccessKeyId: #{ENV['AWS_ACCESS_KEY_ID']}\nAWSAccessKey: #{ENV['AWS_SECRET_ACCESS_KEY']}\nHost: Sandbox"
-    @mturk = Amazon::WebServices::MechanicalTurkRequester.new :Config => ymlstring
+    # ymlstring = "AWSAccessKeyId: #{ENV['AWS_ACCESS_KEY_ID']}\nAWSAccessKey: #{ENV['AWS_SECRET_ACCESS_KEY']}\nHost: Sandbox"
+    # @mturk = Amazon::WebServices::MechanicalTurkRequester.new :Config => ymlstring
+    @mturk = Amazon::WebServices::MechanicalTurkRequester.new :Host => :Production
     super
   end
     
@@ -69,10 +70,10 @@ class ArticlesController < ApplicationController
     desc = "Transcribe the headline shown in an image of an article and find the url of that article."
     keywords = "image, write, transcription, URL"
     numAssignments = 1
-    reward = { :Amount => 0, :CurrencyCode => 'USD' }
+    reward = { :Amount => 1.00, :CurrencyCode => 'USD' }
     assignmentDurationInSeconds = 60 * 60 # 1 hour
-    lifetimeInSeconds = 60 * 60 * 6 # 6 hours
-    hitLayout = "3ZWZ4MEZJVIMBWFDF5RX4PW7BCQF19"
+    lifetimeInSeconds = 60 * 60 * 3 # 6 hours
+    hitLayout = "3UF1487ESTUD3X3IG0S1GCD5RCM906"
     hitLayoutParams = {:Name => 'image_url', :Value => article.image_url}
     # qualRequirement = {
     #   :QualificationTypeId => '2ARFPLSP75KLA8M8DH1HTEQVJT3SY6', 
