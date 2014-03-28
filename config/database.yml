@@ -6,7 +6,7 @@
 development:  
   adapter: postgresql  
   database: savePaper-development  
-  host: "localhost"
+  host: localhost
   pool: 5  
   port: 5432  
   encoding: unicode

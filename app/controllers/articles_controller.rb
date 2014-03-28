@@ -1,7 +1,8 @@
 class ArticlesController < ApplicationController
-
+#  before_action :authenticate_user!
+  
   def initialize
-     ymlstring = "AWSAccessKeyId: #{ENV['AWS_ACCESS_KEY_ID']}\nAWSAccessKey: #{ENV['AWS_SECRET_ACCESS_KEY']}\nHost: Sandbox"
+     ymlstring = "AWSAccessKeyId: #{ENV['AWS_ACCESS_KEY_ID']}\nAWSAccessKey: #{ENV['AWS_SECRET_ACCESS_KEY']}\nHost: Production"
 
     File.open(Rails.root.join('config', 'mturk.yml'), 'w') do |f|  
       f.puts ymlstring 
@@ -21,7 +22,6 @@ class ArticlesController < ApplicationController
   #  openRequests = Article.where("title = nil")
     checkForResults()
     @articles = Article.where("status = 'answered'")
-
     @article = Article.new
   end
 
@@ -42,7 +42,7 @@ class ArticlesController < ApplicationController
       if !reviewableHits.is_a?(Array)
         reviewableHits=[reviewableHits]
       end
-
+     
         reviewableHits.each do |hitId|
           hitId = hitId[:HITId]
           article = Article.find_by(HIT_ID: hitId)  
@@ -50,7 +50,9 @@ class ArticlesController < ApplicationController
           answer = @mturk.GetAssignmentsForHIT(:HITId => hitId)[:GetAssignmentsForHITResult][:Assignment]
           if answer != nil
             assignmentId = answer[:AssignmentId]
-            @mturk.ApproveAssignment(:AssignmentId => assignmentId)
+            if answer[:AssignmentStatus] != "Approved"
+              @mturk.ApproveAssignment(:AssignmentId => assignmentId)
+            end   
             answerHash = @mturk.simplifyAnswer(answer[:Answer])
             article.headline = answerHash["headline"]
             article.url = answerHash["url"]
@@ -80,7 +82,7 @@ class ArticlesController < ApplicationController
     desc = "Transcribe the headline shown in an image of an article and find the url of that article."
     keywords = "image, write, transcription, URL"
     numAssignments = 1
-    reward = { :Amount => 1.00, :CurrencyCode => 'USD' }
+    reward = { :Amount => 0.20, :CurrencyCode => 'USD' }
     assignmentDurationInSeconds = 60 * 60 # 1 hour
     lifetimeInSeconds = 60 * 60 * 3 # 6 hours
     hitLayout = "3UF1487ESTUD3X3IG0S1GCD5RCM906"
