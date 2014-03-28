@@ -1,7 +1,8 @@
 class ArticlesController < ApplicationController
 
   def initialize
-    @mturk = Amazon::WebServices::MechanicalTurkRequester.new :Host => :Sandbox
+    ymlstring = "AWSAccessKeyId: #{ENV['AWS_ACCESS_KEY_ID']}\nAWSAccessKey: #{ENV['AWS_SECRET_ACCESS_KEY']}\nHost: Sandbox"
+    @mturk = Amazon::WebServices::MechanicalTurkRequester.new :Config => ymlstring
     super
   end
     
